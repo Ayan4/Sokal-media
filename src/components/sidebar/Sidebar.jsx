@@ -1,23 +1,35 @@
 import "./sidebar.css";
-import {
-  RssFeed,
-  Chat,
-  PlayCircleFilledOutlined,
-  Group,
-  Bookmark,
-  HelpOutline,
-  WorkOutline,
-  Event,
-  School,
-} from "@material-ui/icons";
-import { Users } from "../../dummyData";
+// import {
+//   RssFeed,
+//   Chat,
+//   PlayCircleFilledOutlined,
+//   Group,
+//   Bookmark,
+//   HelpOutline,
+//   WorkOutline,
+//   Event,
+//   School
+// } from "@material-ui/icons";
+// import { Users } from "../../dummyData";
 import CloseFriend from "../closeFriend/CloseFriend";
+import { useEffect, useState } from "react";
+import { apiClient } from "../../Api/apiClient";
 
 export default function Sidebar() {
+  const [allUsers, setAllUsers] = useState([]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const response = await apiClient.get("/users/all");
+      setAllUsers(response.data.users);
+    };
+    fetchUsers();
+  }, []);
+
   return (
     <div className="sidebar">
       <div className="sidebarWrapper">
-        <ul className="sidebarList">
+        {/* <ul className="sidebarList">
           <li className="sidebarListItem">
             <RssFeed className="sidebarIcon" />
             <span className="sidebarListItemText">Feed</span>
@@ -54,12 +66,12 @@ export default function Sidebar() {
             <School className="sidebarIcon" />
             <span className="sidebarListItemText">Courses</span>
           </li>
-        </ul>
+        </ul> */}
         <button className="sidebarButton">Show More</button>
         <hr className="sidebarHr" />
         <ul className="sidebarFriendList">
-          {Users.map((u) => (
-            <CloseFriend key={u.id} user={u} />
+          {allUsers.map(u => (
+            <CloseFriend key={u._id} user={u} />
           ))}
         </ul>
       </div>

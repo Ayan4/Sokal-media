@@ -1,43 +1,83 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import { apiClient } from "../../Api/apiClient";
 
-export const login = createAsyncThunk("auth/login", async () => {
-  console.log("this ran");
-  const response = await axios.get(
-    "https://sokal-media.herokuapp.com/api/auth/login"
-  );
-  return response.data.user;
+export const loginUser = createAsyncThunk(
+  "user/loginUser",
+  async ({ email, password }) => {
+    const response = await apiClient.post("/auth/login", {
+      email,
+      password
+    });
+    localStorage.setItem(
+      "user",
+      JSON.stringify({ userId: response.data.user._id, isUserPresent: true })
+    );
+    return response.data.user;
+  }
+);
+
+export const getUserData = createAsyncThunk(
+  "/user/getUserData",
+  async userId => {
+    try {
+      const response = await apiClient.get(`/users?userId=${userId}`);
+      return response.data;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+);
+
+export const logout = createAsyncThunk("user/logout", async () => {
+  localStorage.removeItem("user");
 });
 
-const initialState = {
-  user: null,
-  isFetching: false,
-  error: false,
-  status: "idle"
-};
-
 export const authSlice = createSlice({
-  name: "auth",
-  initialState,
-  reducers: {},
-  extraReducers: {
-    [login.pending]: state => {
-      state.isFetching = true;
-      state.error = false;
+  name: "user",
+  initialState: {
+    user: {},
+    isUserPresent: false,
+    isFetching: false,
+    error: null,
+    status: "idle"
+  },
+  reducers: {
+    follow: (state, action) => {
+      state.user.followings.push(action.payload);
     },
-    [login.fulfilled]: (state, action) => {
+    unfollow: (state, action) => {
+      state.user.followings.filter(item => item !== action.payload);
+    }
+    // logout: (state, action) => {
+    //   state.user = {};
+    //   state.isUserPresent = false;
+    // }
+  },
+  extraReducers: {
+    [loginUser.pending]: state => {
+      state.isFetching = true;
+    },
+    [loginUser.fulfilled]: (state, action) => {
       state.status = "success";
       state.isFetching = false;
-      state.error = false;
+      state.isUserPresent = true;
       state.user = action.payload;
     },
-    [login.rejected]: state => {
+    [loginUser.rejected]: (state, action) => {
       state.status = "failed";
-      state.error = true;
+      state.error = action.error.message;
       state.isFetching = false;
+    },
+    [getUserData.pending]: state => {
+      state.isFetching = true;
+    },
+    [getUserData.fulfilled]: (state, action) => {
+      state.isFetching = false;
+      state.user = action.payload;
+      state.isUserPresent = true;
     }
   }
 });
 
-export const {} = authSlice.actions;
+export const { follow, unfollow, setUserData } = authSlice.actions;
 export default authSlice.reducer;

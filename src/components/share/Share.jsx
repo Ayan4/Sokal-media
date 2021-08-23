@@ -4,23 +4,25 @@ import {
   Label,
   Room,
   EmojiEmotions,
-  Cancel,
+  Cancel
 } from "@material-ui/icons";
-import { useContext, useRef, useState } from "react";
-import { AuthContext } from "../../context/AuthContext";
-import axios from "axios";
+import avatar from "../../assets/noAvatar.png";
+import { useRef, useState } from "react";
+import { useSelector } from "react-redux";
+import { apiClient } from "../../Api/apiClient";
 
 export default function Share() {
-  const { user } = useContext(AuthContext);
-  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+  const {
+    auth: { user }
+  } = useSelector(state => state);
   const desc = useRef();
   const [file, setFile] = useState(null);
 
-  const submitHandler = async (e) => {
+  const submitHandler = async e => {
     e.preventDefault();
     const newPost = {
       userId: user._id,
-      desc: desc.current.value,
+      desc: desc.current.value
     };
     if (file) {
       const data = new FormData();
@@ -30,11 +32,13 @@ export default function Share() {
       newPost.img = fileName;
       console.log(newPost);
       try {
-        await axios.post("/upload", data);
-      } catch (err) {}
+        await apiClient.post("/upload", data);
+      } catch (err) {
+        console.log(err);
+      }
     }
     try {
-      await axios.post("/posts", newPost);
+      await apiClient.post("/posts", newPost);
       window.location.reload();
     } catch (err) {}
   };
@@ -45,11 +49,7 @@ export default function Share() {
         <div className="shareTop">
           <img
             className="shareProfileImg"
-            src={
-              user.profilePicture
-                ? PF + user.profilePicture
-                : PF + "person/noAvatar.png"
-            }
+            src={user.profilePicture ? user.profilePicture : avatar}
             alt=""
           />
           <input
@@ -75,7 +75,7 @@ export default function Share() {
                 type="file"
                 id="file"
                 accept=".png,.jpeg,.jpg"
-                onChange={(e) => setFile(e.target.files[0])}
+                onChange={e => setFile(e.target.files[0])}
               />
             </label>
             <div className="shareOption">

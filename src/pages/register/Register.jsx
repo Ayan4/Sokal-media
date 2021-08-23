@@ -1,16 +1,16 @@
-import axios from "axios";
 import { useRef } from "react";
 import "./register.css";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router";
+import { apiClient } from "../../Api/apiClient";
 
 export default function Register() {
   const username = useRef();
   const email = useRef();
   const password = useRef();
   const passwordAgain = useRef();
-  const history = useHistory();
+  const navigate = useNavigate();
 
-  const handleClick = async (e) => {
+  const handleClick = async e => {
     e.preventDefault();
     if (passwordAgain.current.value !== password.current.value) {
       passwordAgain.current.setCustomValidity("Passwords don't match!");
@@ -18,11 +18,11 @@ export default function Register() {
       const user = {
         username: username.current.value,
         email: email.current.value,
-        password: password.current.value,
+        password: password.current.value
       };
       try {
-        await axios.post("/auth/register", user);
-        history.push("/login");
+        await apiClient.post("/auth/register", user);
+        navigate("/login");
       } catch (err) {
         console.log(err);
       }
@@ -59,7 +59,6 @@ export default function Register() {
               ref={password}
               className="loginInput"
               type="password"
-              minLength="6"
             />
             <input
               placeholder="Password Again"
@@ -71,7 +70,12 @@ export default function Register() {
             <button className="loginButton" type="submit">
               Sign Up
             </button>
-            <button className="loginRegisterButton">Log into Account</button>
+            <button
+              onClick={() => navigate("/login")}
+              className="loginRegisterButton"
+            >
+              Log into Account
+            </button>
           </form>
         </div>
       </div>

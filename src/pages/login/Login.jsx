@@ -1,19 +1,30 @@
-import { useContext, useRef } from "react";
+import { useRef, useEffect } from "react";
 import "./login.css";
-import { loginCall } from "../../apiCalls";
-import { AuthContext } from "../../context/AuthContext";
+import { loginUser } from "../../features/auth/authSlice";
+import { useDispatch, useSelector } from "react-redux";
 import { CircularProgress } from "@material-ui/core";
+import { useNavigate } from "react-router";
 
 export default function Login() {
   const email = useRef();
   const password = useRef();
-  const { isFetching, dispatch } = useContext(AuthContext);
+  const {
+    auth: { isFetching, error, isUserPresent }
+  } = useSelector(state => state);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const handleClick = (e) => {
+  useEffect(() => {
+    isUserPresent === true && navigate("/");
+  }, [isUserPresent, navigate, isFetching]);
+
+  const handleClick = e => {
     e.preventDefault();
-    loginCall(
-      { email: email.current.value, password: password.current.value },
-      dispatch
+    dispatch(
+      loginUser({
+        email: email.current.value,
+        password: password.current.value
+      })
     );
   };
 
@@ -21,9 +32,9 @@ export default function Login() {
     <div className="login">
       <div className="loginWrapper">
         <div className="loginLeft">
-          <h3 className="loginLogo">Lamasocial</h3>
+          <h3 className="loginLogo">Sokal App</h3>
           <span className="loginDesc">
-            Connect with friends and the world around you on Lamasocial.
+            Connect with friends and the world around you on Sokal App.
           </span>
         </div>
         <div className="loginRight">
@@ -39,10 +50,12 @@ export default function Login() {
               placeholder="Password"
               type="password"
               required
-              minLength="6"
               className="loginInput"
               ref={password}
             />
+            {error && (
+              <span className="error-msg">Incorrect username or password</span>
+            )}
             <button className="loginButton" type="submit" disabled={isFetching}>
               {isFetching ? (
                 <CircularProgress color="white" size="20px" />
@@ -50,8 +63,12 @@ export default function Login() {
                 "Log In"
               )}
             </button>
-            <span className="loginForgot">Forgot Password?</span>
-            <button className="loginRegisterButton">
+
+            <button
+              className="loginRegisterButton"
+              disabled={isFetching ? true : false}
+              onClick={() => navigate("/register")}
+            >
               {isFetching ? (
                 <CircularProgress color="white" size="20px" />
               ) : (

@@ -1,10 +1,12 @@
 import "./profile.css";
-import Topbar from "../../components/topbar/Topbar";
-import Sidebar from "../../components/sidebar/Sidebar";
-import Feed from "../../components/feed/Feed";
-import Rightbar from "../../components/rightbar/Rightbar";
+import Topbar from "../../../components/topbar/Topbar";
+import Sidebar from "../../../components/sidebar/Sidebar";
+import Feed from "../../../components/feed/Feed";
+import Rightbar from "../../../components/rightbar/Rightbar";
+import avatar from "../../../assets/noAvatar.png";
+import coverPic from "../../../assets/noCover.png";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { apiClient } from "../../../Api/apiClient";
 import { useParams } from "react-router";
 
 export default function Profile() {
@@ -14,7 +16,7 @@ export default function Profile() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const res = await axios.get(`/users?username=${username}`);
+      const res = await apiClient.get(`/users?username=${username}`);
       setUser(res.data);
     };
     fetchUser();
@@ -30,20 +32,12 @@ export default function Profile() {
             <div className="profileCover">
               <img
                 className="profileCoverImg"
-                src={
-                  user.coverPicture
-                    ? PF + user.coverPicture
-                    : PF + "person/noCover.png"
-                }
+                src={user.coverPicture ? PF + user.coverPicture : coverPic}
                 alt=""
               />
               <img
                 className="profileUserImg"
-                src={
-                  user.profilePicture
-                    ? PF + user.profilePicture
-                    : PF + "person/noAvatar.png"
-                }
+                src={user.profilePicture ? PF + user.profilePicture : avatar}
                 alt=""
               />
             </div>
