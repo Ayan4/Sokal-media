@@ -15,7 +15,6 @@
 
 .loginLeft,
 .loginRight {
-  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -89,4 +88,21 @@
   font-size: 20px;
   font-weight: 500;
   cursor: pointer;
+}
+
+.guestLogin {
+  width: 60%;
+  align-self: center;
+  height: 50px;
+  border-radius: 10px;
+  border: none;
+  background-color: #e6a544;
+  color: white;
+  font-size: 20px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.seperator {
+  text-align: center;
 }

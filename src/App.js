@@ -7,6 +7,7 @@ import PrivateRoute from "./pages/privateRoutes/PrivateRoute";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { getUserData } from "./features/auth/authSlice";
+import ErrorRoute from "./pages/ErrorRoute";
 
 function App() {
   const dispatch = useDispatch();
@@ -24,6 +25,7 @@ function App() {
       <Route path="/login" element={<Login />} />
       <PrivateRoute path="/" element={<Home />} />
       <PrivateRoute path="/profile/:username" element={<Profile />} />
+      <Route path="*" element={<ErrorRoute />} />
     </Routes>
   );
 }

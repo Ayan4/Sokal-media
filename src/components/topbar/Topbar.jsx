@@ -24,7 +24,7 @@ export default function Topbar() {
     <div className="topbarContainer">
       <div className="topbarLeft">
         <Link to="/" style={{ textDecoration: "none" }}>
-          <span className="logo">Sokal App</span>
+          <span className="logo">Pulse App</span>
         </Link>
       </div>
       <div className="topbarCenter">
@@ -37,12 +37,15 @@ export default function Topbar() {
         </div>
       </div>
       <div className="topbarRight">
-        <Link to={`/profile/${user.username}`}>
-          <img
-            src={user.profilePicture ? PF + user.profilePicture : avatar}
-            alt=""
-            className="topbarImg"
-          />
+        <Link className="profileLink" to={`/profile/${user.username}`}>
+          <div className="profileSection">
+            <img
+              src={user.profilePicture ? PF + user.profilePicture : avatar}
+              alt=""
+              className="topbarImg"
+            />
+            <p className="profileTag">Profile</p>
+          </div>
         </Link>
         <Button onClick={handleLogout} variant="outlined">
           Logout

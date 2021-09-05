@@ -1,11 +1,5 @@
 import "./share.css";
-import {
-  PermMedia,
-  Label,
-  Room,
-  EmojiEmotions,
-  Cancel
-} from "@material-ui/icons";
+import { PermMedia, Cancel } from "@material-ui/icons";
 import avatar from "../../assets/noAvatar.png";
 import { useRef, useState } from "react";
 import { useSelector } from "react-redux";
@@ -30,17 +24,16 @@ export default function Share() {
       data.append("name", fileName);
       data.append("file", file);
       newPost.img = fileName;
-      console.log(newPost);
       try {
         await apiClient.post("/upload", data);
       } catch (err) {
         console.log(err);
       }
     }
-    try {
+    if (desc.current.value !== "") {
       await apiClient.post("/posts", newPost);
       window.location.reload();
-    } catch (err) {}
+    }
   };
 
   return (
@@ -78,18 +71,6 @@ export default function Share() {
                 onChange={e => setFile(e.target.files[0])}
               />
             </label>
-            <div className="shareOption">
-              <Label htmlColor="blue" className="shareIcon" />
-              <span className="shareOptionText">Tag</span>
-            </div>
-            <div className="shareOption">
-              <Room htmlColor="green" className="shareIcon" />
-              <span className="shareOptionText">Location</span>
-            </div>
-            <div className="shareOption">
-              <EmojiEmotions htmlColor="goldenrod" className="shareIcon" />
-              <span className="shareOptionText">Feelings</span>
-            </div>
           </div>
           <button className="shareButton" type="submit">
             Share

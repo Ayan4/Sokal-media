@@ -1,6 +1,6 @@
 import "./rightbar.css";
-import { Users } from "../../dummyData";
-import Online from "../online/Online";
+// import { Users } from "../../dummyData";
+// import Online from "../online/Online";
 import { useEffect, useState } from "react";
 import { apiClient } from "../../Api/apiClient";
 import { Link } from "react-router-dom";
@@ -8,6 +8,7 @@ import { Add, Remove } from "@material-ui/icons";
 import avatar from "../../assets/noAvatar.png";
 import { follow, unfollow } from "../../features/auth/authSlice";
 import { useSelector, useDispatch } from "react-redux";
+import ad from "../../assets/ad.png";
 
 export default function Rightbar({ user }) {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -53,22 +54,14 @@ export default function Rightbar({ user }) {
     } catch (err) {}
   };
 
+  const redirectHandler = () => {
+    window.location.href = "https://neroview.netlify.app/";
+  };
+
   const HomeRightbar = () => {
     return (
       <>
-        <div className="birthdayContainer">
-          <img className="birthdayImg" src="assets/gift.png" alt="" />
-          <span className="birthdayText">
-            <b>Pola Foster</b> and <b>3 other friends</b> have a birhday today.
-          </span>
-        </div>
-        <img className="rightbarAd" src="assets/ad.png" alt="" />
-        <h4 className="rightbarTitle">Online Friends</h4>
-        <ul className="rightbarFriendList">
-          {Users.map(u => (
-            <Online key={u.id} user={u} />
-          ))}
-        </ul>
+        <img onClick={redirectHandler} className="rightbarAd" src={ad} alt="" />
       </>
     );
   };

@@ -28,13 +28,23 @@ export default function Login() {
     );
   };
 
+  const guestLoginHandler = e => {
+    e.preventDefault();
+    dispatch(
+      loginUser({
+        email: "ayanshukla4@gmail.com",
+        password: "killa"
+      })
+    );
+  };
+
   return (
     <div className="login">
       <div className="loginWrapper">
         <div className="loginLeft">
-          <h3 className="loginLogo">Sokal App</h3>
+          <h3 className="loginLogo">Pulse App</h3>
           <span className="loginDesc">
-            Connect with friends and the world around you on Sokal App.
+            Connect with friends and the world around you on Pulse App.
           </span>
         </div>
         <div className="loginRight">
@@ -61,6 +71,14 @@ export default function Login() {
                 <CircularProgress color="white" size="20px" />
               ) : (
                 "Log In"
+              )}
+            </button>
+            <p className="seperator">Or</p>
+            <button onClick={guestLoginHandler} className="guestLogin">
+              {isFetching ? (
+                <CircularProgress color="white" size="20px" />
+              ) : (
+                "Login as a Guest"
               )}
             </button>
 
